@@ -1,14 +1,15 @@
 # 🩸 HémoVision — Prédiction de Succès de Greffe de Moelle Osseuse Pédiatrique
 
-> Projet Coding Week · Mars 2026 · Équipe : Jay · Léandre Zadi · Adama Sana · Ilias Janati
+> **Coding Week · 09–15 Mars 2026**  
+> Jay · Léandre Zadi · Adama Sana · Ilias Janati
 
 ---
 
 ## 📌 Présentation
 
-HémoVision est une application d'aide à la décision médicale qui prédit la **survie d'un enfant après une greffe allogénique de cellules souches hématopoïétiques** (bone marrow transplant). Le modèle est entraîné sur 187 patients pédiatriques atteints de maladies hématologiques graves (LAL, LAM, aplasie médullaire, etc.).
+HémoVision est une application d'aide à la décision médicale qui prédit la **survie d'un enfant après une greffe allogénique de cellules souches hématopoïétiques**. Le modèle est entraîné sur 187 patients pédiatriques (LAL, LAM, aplasie médullaire…) et s'appuie sur des variables exclusivement **pré-opératoires** — aucune information post-greffe n'est utilisée.
 
-L'interface Streamlit permet à un praticien de saisir les données pré-opératoires d'un patient et d'obtenir instantanément une prédiction accompagnée d'une explication SHAP.
+L'interface Streamlit permet à un praticien de saisir le dossier patient et d'obtenir instantanément une prédiction accompagnée d'une explication SHAP.
 
 ---
 
@@ -17,23 +18,33 @@ L'interface Streamlit permet à un praticien de saisir les données pré-opérat
 ```
 bone_marrow_project/
 │
+├── app/
+│   └── app.py                   # Interface Streamlit (HémoVision)
+│
 ├── data/
-│   ├── bone-marrow.arff        # Dataset source (Silesian University)
-│   ├── X_test.csv              # Données de test (générées par train_model.py)
-│   └── y_test.csv              # Labels de test
+│   ├── bone-marrow.arff         # Dataset source (Silesian University)
+│   ├── X_test.csv               # Features de test (générées par train_model.py)
+│   ├── y_test.csv               # Labels de test
+│   └── model_comparison.csv     # Résultats comparatifs des 3 modèles
 │
 ├── models/
-│   ├── xgboost_model.pkl       # Pipeline XGBoost (StandardScaler + XGBClassifier)
-│   ├── randomforest_model.pkl  # Pipeline Random Forest
-│   ├── svm_model.pkl           # Pipeline SVM
-│   └── features_list.pkl       # Liste des 44 features finales
+│   ├── xgboost_model.pkl        # Pipeline XGBoost (StandardScaler + XGBClassifier)
+│   ├── randomforest_model.pkl   # Pipeline Random Forest
+│   ├── svm_model.pkl            # Pipeline SVM (probability=True)
+│   └── features_list.pkl        # Liste des 44 features finales
 │
-├── data_processing.py          # Pipeline de prétraitement complet
-├── train_model.py              # Entraînement et sauvegarde des modèles
-├── evaluate_model.py           # Évaluation et visualisations
-├── app.py                      # Interface Streamlit (HémoVision)
-├── eda.md                      # Analyse exploratoire des données
-└── README.md                   # Ce fichier
+├── notebooks/
+│   └── eda.ipynb                # Analyse exploratoire des données
+│
+├── src/
+│   ├── data_processing.py       # Pipeline de prétraitement complet
+│   ├── train_model.py           # Entraînement et sauvegarde des modèles
+│   └── evaluate_model.py        # Évaluation, métriques et visualisations
+│
+├── tests/                       # Tests unitaires
+├── Dockerfile                   # Image Docker
+├── requirements.txt             # Dépendances Python
+└── README.md                    # Ce fichier
 ```
 
 ---
@@ -43,26 +54,34 @@ bone_marrow_project/
 ### Prérequis
 
 - Python 3.10+
-- pip
 
-### Dépendances
+### Via pip
 
 ```bash
-pip install streamlit pandas numpy scikit-learn xgboost imbalanced-learn shap scipy matplotlib seaborn joblib
+pip install -r requirements.txt
+```
+
+### Via Docker
+
+```bash
+docker build -t hemovision .
+docker run -p 8501:8501 hemovision
 ```
 
 ---
 
-## 🚀 Lancement
+## 🚀 Utilisation
 
 ### 1. Placer le dataset
 
-Copier `bone-marrow.arff` dans le dossier `data/`.
+```
+data/bone-marrow.arff
+```
 
 ### 2. Entraîner les modèles
 
 ```bash
-python train_model.py
+python src/train_model.py
 ```
 
 Génère les fichiers `.pkl` dans `models/` et les données de test dans `data/`.
@@ -70,15 +89,15 @@ Génère les fichiers `.pkl` dans `models/` et les données de test dans `data/`
 ### 3. Évaluer les modèles
 
 ```bash
-python evaluate_model.py
+python src/evaluate_model.py
 ```
 
-Génère les visualisations dans `outputs/` : matrices de confusion, courbes ROC, feature importances, heatmap des métriques.
+Génère dans `outputs/` : matrices de confusion, courbes ROC, feature importances, heatmap des métriques.
 
 ### 4. Lancer l'interface
 
 ```bash
-streamlit run app.py
+streamlit run app/app.py
 ```
 
 ---
@@ -86,43 +105,45 @@ streamlit run app.py
 ## 🔬 Pipeline ML
 
 ```
-bone-marrow.arff
-      │
-      ▼
-load_arff()          ← Décodage bytes, remplacement des '?' par NaN
-      │
-      ▼
-impute()             ← KNN (numérique) + Mode (catégoriel)
-      │
-      ▼
-optimize_memory()    ← float64→float32 (après imputation)
-      │
-      ▼
-prepare_target()     ← survival_status → target (0=survie, 1=décès)
-      │
-      ▼
+data/bone-marrow.arff
+        │
+        ▼
+load_arff()            ← Décodage bytes + remplacement '?' → NaN (convention ARFF)
+        │
+        ▼
+impute()               ← KNNImputer (numérique) · Mode (catégoriel)
+        │
+        ▼
+optimize_memory()      ← float64→float32  [après imputation]
+        │
+        ▼
+prepare_target()       ← survival_status → target  (0=survie · 1=décès)
+        │
+        ▼
 encode_split_resample()
-      ├─ One-Hot Encoding (drop_first=True)
-      ├─ Train/Test split stratifié (80/20)
-      └─ SMOTE sur le train uniquement
-      │
-      ▼
+        ├── One-Hot Encoding     (drop_first=True)
+        ├── Train/Test split     (80/20 · stratifié)
+        └── SMOTE                (train uniquement — pas de data leakage)
+        │
+        ▼
 drop_invalid_cols()
-      ├─ 8 colonnes post-greffe (leakage)
-      └─ 5 colonnes redondantes (binarisations)
-      │
-      ▼
-Pipeline sklearn (StandardScaler + Estimateur)
-      ├─ RandomForestClassifier
-      ├─ XGBClassifier
-      └─ SVC (probability=True)
+        ├── 8 colonnes post-greffe  (leakage)
+        └── 5 colonnes redondantes  (multicolinéarité)
+        │
+        ▼
+Pipeline sklearn  [StandardScaler + Estimateur]
+        ├── RandomForestClassifier  (n_estimators=100)
+        ├── XGBClassifier           (eval_metric=logloss)
+        └── SVC                     (probability=True)
 ```
 
 ---
 
-## 🚫 Data Leakage — Colonnes Exclues
+## 🚫 Colonnes Exclues
 
-### Colonnes post-greffe (non disponibles au moment de la décision)
+### Variables post-greffe — Data Leakage
+
+Ces informations ne sont **pas disponibles** au moment de la décision clinique.
 
 | Colonne | Raison |
 |---|---|
@@ -133,21 +154,23 @@ Pipeline sklearn (StandardScaler + Estimateur)
 | `ANCrecovery` | Temps récupération neutrophiles — après greffe |
 | `PLTrecovery` | Temps récupération plaquettes — après greffe |
 | `time_to_aGvHD_III_IV` | Délai avant GvHD III/IV — après greffe |
-| `survival_time` | Durée de survie — après greffe |
+| `survival_time` | Durée de survie — leakage évident |
 
-### Colonnes redondantes (multicolinéarité)
+### Variables redondantes — Multicolinéarité
 
-| Supprimée | Conservée |
-|---|---|
-| `Donorage35` | `Donorage` |
-| `Recipientage10` | `Recipientage` |
-| `Recipientageint` | `Recipientage` |
-| `HLAmismatch` | `HLAmatch` |
-| `Diseasegroup` | `Disease` |
+| Supprimée | Conservée | Relation |
+|---|---|---|
+| `Donorage35` | `Donorage` | Binarisation seuil 35 ans |
+| `Recipientage10` | `Recipientage` | Binarisation seuil 10 ans |
+| `Recipientageint` | `Recipientage` | Découpage en intervalles |
+| `HLAmismatch` | `HLAmatch` | Binarisation du score HLA |
+| `Diseasegroup` | `Disease` | Binarisation maligne/non-maligne |
 
 ---
 
-## 📊 Résultats (sur le jeu de test, 38 patients)
+## 📊 Résultats
+
+Les métriques sont générées par `src/evaluate_model.py` et sauvegardées dans `data/model_comparison.csv`.
 
 | Modèle | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
 |---|---|---|---|---|---|
@@ -155,92 +178,25 @@ Pipeline sklearn (StandardScaler + Estimateur)
 | Random Forest | — | — | — | — | — |
 | SVM | — | — | — | — | — |
 
-> Les métriques sont générées après entraînement par `evaluate_model.py` et sauvegardées dans `outputs/model_comparison.csv`.
+> Remplir après exécution de `evaluate_model.py`
 
 ---
 
 ## 🧬 Explicabilité SHAP
 
-Le modèle XGBoost est accompagné d'une explication SHAP (SHapley Additive exPlanations) pour chaque prédiction individuelle. Le graphique **waterfall** décompose la prédiction en contributions de chaque variable, permettant au praticien de comprendre *pourquoi* le modèle prédit un risque élevé ou faible.
+Chaque prédiction XGBoost est accompagnée d'un graphique **SHAP waterfall** qui décompose la prédiction en contributions individuelles de chaque variable. Cela permet au praticien de comprendre **pourquoi** le modèle prédit un risque élevé ou faible pour un patient donné.
 
 ---
 
-## 🤖 Prompt Engineering
+## 📚 Source des Données
 
-Cette section documente comment nous avons utilisé Claude (Anthropic) pour accélérer le développement du projet, conformément aux exigences pédagogiques.
+**Marek Sikora, Lukasz Wrobel**  
+Institute of Computer Science, Silesian University of Technology, Gliwice, Pologne
 
----
-
-### Tâche sélectionnée : Implémentation de `data_processing.py`
-
-Nous avons choisi de documenter la conception du pipeline de prétraitement, qui était la tâche la plus critique et la plus complexe du projet.
-
----
-
-### Prompt initial (version naïve)
-
-> *"Écris une fonction Python pour charger un fichier ARFF, gérer les valeurs manquantes et préparer les données pour un modèle de machine learning."*
-
-**Résultat obtenu :** Une fonction monolithique de 40 lignes mélangeant chargement, imputation, encodage et split. Elle ne gérait pas les '?' ARFF, utilisait `fillna(0)` pour toutes les colonnes, et appliquait le StandardScaler avant le KNN (ce qui est incorrect).
-
-**Problèmes identifiés :**
-- Les `?` du format ARFF non remplacés → créaient de fausses catégories après OHE
-- KNN sur données brutes (non normalisées) → distances biaisées par les unités
-- SMOTE appliqué sur tout le dataset → data leakage sur le test set
-- `optimize_memory()` appliqué avant imputation → float32 dégradait la précision du KNN
-
----
-
-### Prompt amélioré (version finale)
-
-> *"Écris un pipeline de prétraitement Python modulaire pour le dataset BMT Children (format ARFF, 187 patients, 37 variables). Contraintes :*
-> *1. Remplacer les '?' ARFF par np.nan dès le chargement (scipy.io.arff)*
-> *2. Imputer séparément : KNNImputer sur les colonnes numériques APRÈS StandardScaler + inverse_transform, SimpleImputer(mode) sur les catégorielles*
-> *3. Appliquer optimize_memory() (float64→float32) APRÈS l'imputation pour préserver la précision KNN*
-> *4. SMOTE uniquement sur le train set (pas de leakage)*
-> *5. Chaque étape dans une fonction séparée avec docstring expliquant le 'pourquoi'"*
-
-**Résultat obtenu :** Le pipeline modulaire en 6 fonctions (`load_arff`, `impute`, `optimize_memory`, `prepare_target`, `encode_split_resample`, `save_test_data`) avec docstrings détaillées justifiant chaque choix technique.
-
----
-
-### Analyse de l'efficacité
-
-| Critère | Prompt naïf | Prompt amélioré |
-|---|---|---|
-| Gestion des `?` ARFF | ❌ Non géré | ✅ `replace("?", np.nan)` |
-| Ordre KNN / normalisation | ❌ Inversé | ✅ Scale → KNN → inverse |
-| Ordre KNN / optimize_memory | ❌ Inversé | ✅ Impute d'abord |
-| SMOTE sur train uniquement | ❌ Sur tout | ✅ Post-split uniquement |
-| Modularité | ❌ 1 fonction | ✅ 6 fonctions testables |
-| Docstrings avec justifications | ❌ Absentes | ✅ Présentes |
-
-**Enseignements clés :**
-
-1. **La spécificité technique prime** — Mentionner explicitement les contraintes d'ordre (`optimize_memory` APRÈS `impute`) a évité un bug subtil qui aurait dégradé la précision silencieusement.
-
-2. **Demander le "pourquoi" dans les docstrings** — En exigeant que chaque fonction documente sa justification, le code généré est devenu pédagogique et auditables par l'équipe.
-
-3. **Décomposer en sous-tâches** — Un prompt demandant une seule grande fonction produit du code monolithique difficile à tester. Spécifier la décomposition souhaitée (`une fonction par étape`) a directement orienté l'architecture.
-
-4. **Les contraintes négatives sont utiles** — Dire explicitement ce qu'il NE faut PAS faire (SMOTE sur tout le dataset, KNN sur données brutes) a permis d'éviter les erreurs classiques du preprocessing ML.
-
----
-
-### Amélioration potentielle
-
-Pour une prochaine itération, nous ajouterions dans le prompt : *"Génère également les tests unitaires pytest correspondants, en vérifiant les invariants de chaque fonction (shape, absence de NaN, types)"* — ce qui aurait produit les tests et le code en une seule itération.
+Dataset : [UCI ML Repository — Bone Marrow Transplant: Children](https://archive.ics.uci.edu/ml/datasets/Bone+Marrow+Transplant%3A+Children)
 
 ---
 
 ## ⚠️ Avertissement
 
 Ce projet est un **prototype académique** développé dans le cadre de la Coding Week. Il n'est **pas certifié** pour un usage clinique réel. Toute décision médicale doit reposer sur l'évaluation d'un professionnel de santé qualifié.
-
----
-
-## 📚 Source des Données
-
-Marek Sikora, Lukasz Wrobel — *Institute of Computer Science, Silesian University of Technology, Gliwice, Poland*
-
-Dataset : [UCI ML Repository — Bone Marrow Transplant: Children](https://archive.ics.uci.edu/ml/datasets/Bone+Marrow+Transplant%3A+Children)
