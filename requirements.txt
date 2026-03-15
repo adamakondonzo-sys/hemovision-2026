@@ -4,7 +4,7 @@ scikit-learn
 xgboost
 lightgbm
 shap
-streamlit
+streamlit==1.32.0
 matplotlib
 seaborn
 joblib
