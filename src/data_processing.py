@@ -54,7 +54,7 @@ def load_arff(filepath: str) -> pd.DataFrame:
     # Remplacement des '?' par NaN (convention ARFF pour les valeurs manquantes)
     df.replace("?", np.nan, inplace=True)
 
-    total_nan = df.isnull().sum().sum()
+     = df.isnull().sum().sum()
     log.info(f"Dataset chargé : {df.shape[0]} lignes, {df.shape[1]} colonnes")
     log.info(f"Total valeurs manquantes (NaN + '?') : {total_nan}")
     log.info(f"Détail :\n{df.isnull().sum()[df.isnull().sum() > 0]}")
