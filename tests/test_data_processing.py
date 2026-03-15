@@ -45,19 +45,7 @@ def sample_df():
     """
     np.random.seed(42)
     n = 20
-    return pd.DataFrame({
-        "Donorage":       np.random.uniform(18, 56, n),
-        "Recipientage":   np.random.uniform(0.5, 20, n),
-        "CD34kgx10d6":    np.random.uniform(0.8, 58, n),
-        "CD3dCD34":       np.random.uniform(0.2, 30, n),
-        "CD3dkgx10d8":    np.random.uniform(0.04, 20, n),
-        "Rbodymass":      np.random.uniform(6, 104, n),
-        "Disease":        np.random.choice(["ALL", "AML", "chronic", "nonmalignant"], n),
-        "Riskgroup":      np.random.choice(["0", "1"], n),
-        "HLAmatch":       np.random.choice(["0", "1", "2"], n),
-        "Stemcellsource": np.random.choice(["0", "1"], n),
-        "survival_status": np.random.choice([0.0, 1.0], n),
-    })
+   
 
 
 @pytest.fixture
