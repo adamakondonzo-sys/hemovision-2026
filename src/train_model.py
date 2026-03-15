@@ -73,8 +73,7 @@ def drop_invalid_cols(
             to_drop.extend(matched)
         return to_drop
 
-    drop_train = _find_cols(X_train)
-    drop_test  = _find_cols(X_test)
+  
 
     assert set(drop_train) == set(drop_test), (
         f"Colonnes asymétriques entre train et test !\n"
