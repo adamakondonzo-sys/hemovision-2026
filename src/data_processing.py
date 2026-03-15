@@ -109,6 +109,22 @@ def impute(df: pd.DataFrame, n_neighbors: int = 5) -> pd.DataFrame:
 # 3. OPTIMISATION MÉMOIRE  (après imputation pour préserver la précision KNN)
 # ─────────────────────────────────────────────────────────────────────────────
 
+def optimize_memory(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Réduit l'empreinte mémoire APRÈS l'imputation.
+    float64 → float32, int64 → int32
+    Note : on ne descend pas à float16 car les colonnes médicales continues
+    (CD34kgx10d6, survival_time…) nécessitent la précision float32 minimum.
+    """
+    before = df.memory_usage(deep=True).sum() / 1024
+    for col in df.columns:
+        if df[col].dtype == "float64":
+            df[col] = df[col].astype("float32")
+        elif df[col].dtype == "int64":
+            df[col] = df[col].astype("int32")
+    after = df.memory_usage(deep=True).sum() / 1024
+    log.info(f"Mémoire : {before:.1f} KB → {after:.1f} KB")
+    return df
 
 
 
