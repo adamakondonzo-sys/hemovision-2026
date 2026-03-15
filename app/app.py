@@ -638,3 +638,9 @@ with tab3:
 # ─────────────────────────────────────────────────────────────────────────────
 # FOOTER
 # ─────────────────────────────────────────────────────────────────────────────
+st.markdown("""
+<hr/>
+<p style="text-align:center;color:#9ab0c8;font-size:.78rem;letter-spacing:.05em">
+     HémoVision • Coding Week 09-15 Mars 2026 • XBoost + SHAP Usage académique uniquement
+</p>
+""", unsafe_allow_html=True)
