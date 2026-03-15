@@ -250,7 +250,9 @@ def load_resources():
         st.error("❌ Fichiers modèle introuvables dans models/")
         return None, None
 
-
+model, features_list = load_resources()
+if model is None:
+    st.stop()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
