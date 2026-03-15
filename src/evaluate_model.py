@@ -27,7 +27,9 @@ warnings.filterwarnings("ignore")
 
 # ─── Constantes ───────────────────────────────────────────────────────────────
 
-
+MODELS_DIR  = "models"
+OUTPUT_DIR  = "outputs"
+MODEL_NAMES = ["randomforest", "xgboost", "svm"]
 
 # Palette cohérente pour toutes les figures
 PALETTE = {
