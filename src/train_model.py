@@ -131,7 +131,38 @@ def build_pipelines() -> dict[str, Pipeline]:
 # ENTRAÎNEMENT ET SAUVEGARDE
 # ─────────────────────────────────────────────────────────────────────────────
 
+def train_and_save() -> None:
+    os.makedirs(MODELS_DIR, exist_ok=True)
+    os.makedirs(DATA_DIR,   exist_ok=True)
 
+    # 1. Preprocessing complet
+    print("=" * 55)
+    print("  PRÉPROCESSING")
+    print("=" * 55)
+    X_train, X_test, y_train, y_test = full_pipeline(ARFF_PATH, save_dir=None)
+
+    # 2. Suppression leakage + redondances
+    print("\n" + "=" * 55)
+    print("  NETTOYAGE DES FEATURES")
+    print("=" * 55)
+    X_train, X_test = drop_invalid_cols(X_train, X_test)
+
+    # 3. Sauvegarde X_test / y_test propres (après suppression)
+    X_test.to_csv(os.path.join(DATA_DIR, "X_test.csv"), index=False)
+    pd.Series(y_test).to_csv(os.path.join(DATA_DIR, "y_test.csv"), index=False)
+    joblib.dump(X_train.columns.tolist(), os.path.join(MODELS_DIR, "features_list.pkl"))
+    print(f"💾 X_test, y_test, features_list → '{DATA_DIR}/'")
+
+    # 4. Entraînement
+    print("\n" + "=" * 55)
+    print("  ENTRAÎNEMENT")
+    print("=" * 55)
+    for name, pipeline in build_pipelines().items():
+        print(f"\n→ {name.upper()}...")
+        pipeline.fit(X_train, y_train)
+        out = os.path.join(MODELS_DIR, f"{name}_model.pkl")
+        joblib.dump(pipeline, out)
+        print(f"   ✅ Sauvegardé → {out}")
 
     print("\n" + "=" * 55)
     print("  TERMINÉ — 3 modèles prêts dans 'models/'")
