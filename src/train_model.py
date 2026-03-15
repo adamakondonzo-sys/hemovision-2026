@@ -157,7 +157,12 @@ def train_and_save() -> None:
     print("\n" + "=" * 55)
     print("  ENTRAÎNEMENT")
     print("=" * 55)
-   
+    for name, pipeline in build_pipelines().items():
+        print(f"\n→ {name.upper()}...")
+        pipeline.fit(X_train, y_train)
+        out = os.path.join(MODELS_DIR, f"{name}_model.pkl")
+        joblib.dump(pipeline, out)
+        print(f"   ✅ Sauvegardé → {out}")
 
     print("\n" + "=" * 55)
     print("  TERMINÉ — 3 modèles prêts dans 'models/'")
