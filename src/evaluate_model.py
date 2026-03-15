@@ -319,4 +319,30 @@ def plot_metrics_heatmap(
 # ─────────────────────────────────────────────────────────────────────────────
 # POINT D'ENTRÉE
 # ─────────────────────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    print("=" * 55)
+    print("      ÉVALUATION DES MODÈLES — BONE MARROW")
+    print("=" * 55)
 
+    # 1. Charger les données de test (produites par data_processing.py)
+    X_test, y_test = load_test_data("data/X_test.csv", "data/y_test.csv")
+
+    # 2. Évaluer tous les modèles
+    df_results, importances, roc_data = evaluate_all_models(X_test, y_test)
+
+    # 3. Afficher le tableau
+    print("\n📋 Tableau Comparatif :")
+    print(df_results.to_string())
+
+    # 4. Sauvegarder le CSV
+    csv_path = os.path.join(OUTPUT_DIR, "model_comparison.csv")
+    df_results.to_csv(csv_path)
+    print(f"\n💾 Résultats → {csv_path}")
+
+    # 5. Générer toutes les visualisations
+    plot_confusion_matrices(X_test, y_test)
+    plot_roc_curves(roc_data)
+    plot_feature_importances(importances)
+    plot_metrics_heatmap(df_results)
+
+    print("\n✅ Évaluation complète terminée.")
