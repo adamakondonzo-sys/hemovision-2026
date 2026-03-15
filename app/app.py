@@ -430,7 +430,7 @@ with tab1:
 
     with right:
         if run:
-            user_data  = build_input()
+            use_data  = build_input()
             prediction = model.predict(user_data)[0]
             proba      = model.predict_proba(user_data)[0]
 
