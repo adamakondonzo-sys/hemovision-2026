@@ -6,7 +6,7 @@ Design : clinique-moderne, palette navy/cyan/blanc, typographie médicale sobre
 import streamlit as st
 import pandas as pd
 import joblib
-import 
+import shap
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
