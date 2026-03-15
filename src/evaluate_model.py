@@ -45,7 +45,23 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # CHARGEMENT DES DONNÉES DE TEST
 # ─────────────────────────────────────────────────────────────────────────────
 
+def load_test_data(
+    x_path: str = "data/X_test.csv",
+    y_path: str = "data/y_test.csv",
+) -> tuple[pd.DataFrame, pd.Series]:
+    """
+    Charge X_test et y_test produits par data_processing.full_pipeline().
+    y_test peut être un DataFrame 1-colonne ou une Series — on normalise.
+    """
+    X_test = pd.read_csv(x_path)
+    y_raw  = pd.read_csv(y_path)
 
+    # pd.read_csv retourne toujours un DataFrame — on extrait la Series
+    y_test = y_raw.iloc[:, 0].astype(int)
+
+    print(f"✅ Test set chargé : {X_test.shape[0]} exemples, {X_test.shape[1]} features")
+    print(f"   Distribution cible : {y_test.value_counts().to_dict()}")
+    return X_test, y_test
 
 
 # ─────────────────────────────────────────────────────────────────────────────
