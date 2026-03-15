@@ -348,7 +348,7 @@ def build_input() -> pd.DataFrame:
     if "DonorCMV_1"  in d: d["DonorCMV_1"]  = 1 if val_d_cmv == "Positif" else 0
     if "Gendermatch_1" in d: d["Gendermatch_1"] = 1 if val_genderm == "Femme→Homme" else 0
 
-    d_abo = abo_map.get(val_d_abo)
+    d_abo = abo_map.get(val_d_abo)    
     if d_abo and f"DonorABO_{d_abo}" in d: d[f"DonorABO_{d_abo}"] = 1
 
     # ── Source cellules souches ───────────────────────────────
