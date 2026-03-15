@@ -102,7 +102,28 @@ def get_predictions(model, X_test: pd.DataFrame) -> tuple[np.ndarray, np.ndarray
 # EXTRACTION DES FEATURE IMPORTANCES DEPUIS UN PIPELINE
 # ─────────────────────────────────────────────────────────────────────────────
 
+def extract_feature_importances(
+    model, feature_names: list[str]
+) -> pd.Series | None:
+    """
+    Extrait les importances de features que le modèle soit un Pipeline
+    sklearn ou un estimateur brut.
 
+    Pour un Pipeline, l'estimateur final est dans model.steps[-1][1].
+    RF et XGBoost exposent feature_importances_.
+    SVM ne l'expose pas → retourne None.
+    """
+    # Cas Pipeline sklearn
+    estimator = model
+    if hasattr(model, "steps"):
+        estimator = model.steps[-1][1]   # dernier étage du Pipeline
+
+    if hasattr(estimator, "feature_importances_"):
+        return (
+            pd.Series(estimator.feature_importances_, index=feature_names)
+            .sort_values(ascending=False)
+        )
+    return None
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ÉVALUATION
