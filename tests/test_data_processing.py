@@ -81,6 +81,15 @@ def df_imputed(sample_df):
     return sample_df.copy()
 
 
+@pytest.fixture
+def df_with_target(df_imputed):
+    """DataFrame avec la colonne cible renommée en 'target'."""
+    df = df_imputed.copy()
+    df = df.rename(columns={"survival_status": "target"})
+    df["target"] = df["target"].astype(int)
+    return df
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 1. load_arff
 # ─────────────────────────────────────────────────────────────────────────────
