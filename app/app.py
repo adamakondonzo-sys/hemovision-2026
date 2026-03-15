@@ -240,7 +240,19 @@ hr { border-color: #e0e8f0 !important; margin: 1.2rem 0 !important; }
 # ─────────────────────────────────────────────────────────────────────────────
 # CHARGEMENT DES RESSOURCES
 # ─────────────────────────────────────────────────────────────────────────────
+@st.cache_resource
+def load_resources():
+    try:
+        model    = joblib.load('models/xgboost_model.pkl')
+        features = joblib.load('models/features_list.pkl')
+        return model, features
+    except FileNotFoundError:
+        st.error("❌ Fichiers modèle introuvables dans models/")
+        return None, None
 
+model, features_list = load_resources()
+if model is None:
+    st.stop()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
