@@ -33,7 +33,9 @@ log = logging.getLogger(__name__)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def load_arff(filepath: str) -> pd.DataFrame:
-
+    """
+    Charge un fichier .arff, décode les bytes en str,
+    et remplace les '?' par np.nan.
 
     Pourquoi remplacer '?' ?
     Le format ARFF encode les valeurs manquantes catégorielles comme '?'.
