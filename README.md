@@ -1,6 +1,6 @@
 # 🩸 HémoVision — Prédiction de Succès de Greffe de Moelle Osseuse Pédiatrique
 
-> Projet Coding Week · Mars 2026 · Équipe : Jay · Léandre Zadi · Adama Sana · Ilias Janati
+>> Projet Coding Week · Mars 2026 · Équipe : Jaures Donzo · Léandre Gnahoua · Adama Sana · Ilias Janati · Samira Elamrani
 
 ---
 
