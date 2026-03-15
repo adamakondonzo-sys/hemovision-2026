@@ -4,7 +4,7 @@ Design : clinique-moderne, palette navy/cyan/blanc, typographie médicale sobre
 """
 
 import streamlit as st
-import pandas as 
+import pandas as pd
 import joblib
 import shap
 import matplotlib
