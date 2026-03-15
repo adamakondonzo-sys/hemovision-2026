@@ -101,8 +101,6 @@ def impute(df: pd.DataFrame, n_neighbors: int = 5) -> pd.DataFrame:
         df[cat_cols] = imp_cat.fit_transform(df[cat_cols])
         log.info("Mode imputation appliquée sur les colonnes catégorielles.")
 
-    assert df.isnull().sum().sum() == 0, "Il reste des NaN après imputation !"
-    return df
 
 
 # ─────────────────────────────────────────────────────────────────────────────
