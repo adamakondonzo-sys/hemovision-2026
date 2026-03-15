@@ -611,7 +611,7 @@ with tab3:
             </p>
         </div>""", unsafe_allow_html=True)
 
-  with a2:
+    with a2:
         st.markdown("""<div class="card">
             <div class="card-title">⚠️ Avertissement Clinique</div>
             <p style="color:#7f1d1d;font-size:.88rem;line-height:1.7;background:#fff5f5;
