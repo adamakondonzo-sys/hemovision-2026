@@ -102,7 +102,7 @@ def impute(df: pd.DataFrame, n_neighbors: int = 5) -> pd.DataFrame:
         log.info("Mode imputation appliquée sur les colonnes catégorielles.")
 
     assert df.isnull().sum().sum() == 0, "Il reste des NaN après imputation !"
-    return df
+    
 
 
 # ─────────────────────────────────────────────────────────────────────────────
