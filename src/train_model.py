@@ -77,7 +77,9 @@ def drop_invalid_cols(
     drop_test  = _find_cols(X_test)
 
     assert set(drop_train) == set(drop_test), (
-
+        f"Colonnes asymétriques entre train et test !\n"
+        f"  Train: {sorted(drop_train)}\n  Test:  {sorted(drop_test)}"
+    )
 
     leakage_found   = [c for c in drop_train if any(c == l or c.startswith(f"{l}_") for l in LEAKAGE_COLS)]
     redundant_found = [c for c in drop_train if any(c == r or c.startswith(f"{r}_") for r in REDUNDANT_COLS)]
