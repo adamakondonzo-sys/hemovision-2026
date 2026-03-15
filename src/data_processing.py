@@ -20,7 +20,7 @@ import numpy as np
 from scipy.io import arff
 from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection i train_test_split
 from imblearn.over_sampling import SMOTE
 import logging
 
