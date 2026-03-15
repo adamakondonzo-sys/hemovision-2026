@@ -89,7 +89,8 @@ def impute(df: pd.DataFrame, n_neighbors: int = 5) -> pd.DataFrame:
 
     # --- Numérique : KNN sur données normalisées ---
     if df[num_cols].isnull().any().any():
-       
+        scaler = StandardScaler()
+        scaled = scaler.fit_transform(df[num_cols])
         imputed_scaled = KNNImputer(n_neighbors=n_neighbors).fit_transform(scaled)
         df[num_cols] = scaler.inverse_transform(imputed_scaled)
         log.info(f"KNN imputation appliquée sur : {num_cols}")
