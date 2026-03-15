@@ -88,7 +88,7 @@ def drop_invalid_cols(
     print(f"🔁 Redondantes supprimées  ({len(redundant_found)}) : {redundant_found}")
     print(f"✅ Features finales : {X_train.shape[1] - len(drop_train)} colonnes")
 
-
+    return X_train.drop(columns=drop_train), X_test.drop(columns=drop_test)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
