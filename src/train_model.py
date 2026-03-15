@@ -57,7 +57,21 @@ ARFF_PATH  = os.path.join(DATA_DIR, "bone-marrow.arff")
 # SUPPRESSION DES COLONNES INUTILES / DANGEREUSES
 # ─────────────────────────────────────────────────────────────────────────────
 
-
+def drop_invalid_cols(
+    X_train: pd.DataFrame,
+    X_test: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Supprime les colonnes post-greffe et redondantes de X_train et X_test.
+    Gère aussi les variantes OHE (ex: IIIV_1, extcGvHD_0).
+    Vérifie que train et test ont exactement les mêmes colonnes supprimées.
+    """
+    def _find_cols(df: pd.DataFrame) -> list[str]:
+        to_drop = []
+        for col in COLS_TO_DROP:
+            matched = [c for c in df.columns if c == col or c.startswith(f"{col}_")]
+            to_drop.extend(matched)
+        return to_drop
 
 
     drop_train = _find_cols(X_train)
