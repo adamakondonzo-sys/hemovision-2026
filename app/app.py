@@ -611,30 +611,7 @@ with tab3:
             </p>
         </div>""", unsafe_allow_html=True)
 
-    with a2:
-        st.markdown("""<div class="card">
-            <div class="card-title">⚠️ Avertissement Clinique</div>
-            <p style="color:#7f1d1d;font-size:.88rem;line-height:1.7;background:#fff5f5;
-                      padding:1rem;border-radius:8px;border-left:3px solid #c62828">
-            Cet outil est un <strong>prototype académique</strong> développé dans le cadre
-            de la Semaine Coding. Il n'est <strong>pas certifié</strong> pour un usage
-            clinique réel. Toute décision médicale doit reposer sur l'évaluation
-            d'un professionnel de santé qualifié.
-            </p>
-        </div>""", unsafe_allow_html=True)
 
-        st.markdown("""<div class="card">
-            <div class="card-title">👥 Équipe</div>
-            <p style="color:#4a6080;font-size:.88rem;line-height:1.8">
-            🎓 <strong>Coding Week — Mars 2026</strong><br>
-            Développé par :<br>
-            · Jaures Donzo<br>
-            · Léandre Gnahoua<br>
-            · Adama Sana<br>
-            · Ilias Janati<br>
-            · Samira Elamrani
-            </p>
-        </div>""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FOOTER
