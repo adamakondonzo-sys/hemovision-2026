@@ -8,7 +8,7 @@ Adapté au pipeline data_processing.py :
   - Toutes les visualisations : confusion, ROC, importances, heatmap métriques
 """
 
-import os
+import 
 import warnings
 import pandas as pd
 import numpy as np
