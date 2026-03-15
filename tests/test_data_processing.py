@@ -61,21 +61,6 @@ def sample_df():
 
 
 @pytest.fixture
-def df_with_missing(sample_df):
-    """
-    Même DataFrame mais avec des NaN sur les colonnes numériques
-    et des '?' sur les colonnes catégorielles (convention ARFF).
-    """
-    df = sample_df.copy()
-    df.loc[0, "CD34kgx10d6"]  = np.nan
-    df.loc[1, "CD3dCD34"]     = np.nan
-    df.loc[2, "Rbodymass"]    = np.nan
-    df.loc[3, "Disease"]      = np.nan
-    df.loc[4, "Riskgroup"]    = np.nan
-    return df
-
-
-@pytest.fixture
 def df_imputed(sample_df):
     """DataFrame déjà imputé (pas de NaN) — utilisé pour les tests aval."""
     return sample_df.copy()
