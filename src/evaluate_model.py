@@ -61,7 +61,7 @@ def load_test_data(
 
     print(f"✅ Test set chargé : {X_test.shape[0]} exemples, {X_test.shape[1]} features")
     print(f"   Distribution cible : {y_test.value_counts().to_dict()}")
-    return X_test, y_test
+    
 
 
 # ─────────────────────────────────────────────────────────────────────────────
