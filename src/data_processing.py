@@ -24,7 +24,8 @@ from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
 import logging
 
-
+logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(message)s")
+log = logging.getLogger(__name__)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
