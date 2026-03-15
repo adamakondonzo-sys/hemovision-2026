@@ -32,7 +32,8 @@ LEAKAGE_COLS = [
     "ANCrecovery",           # Temps de récupération des neutrophiles
     "PLTrecovery",           # Temps de récupération des plaquettes
     "time_to_aGvHD_III_IV",  # Délai avant GvHD III/IV
-   
+    "survival_time",         # Durée de survie (leakage évident)
+]
 
 # Versions binarisées de variables continues déjà présentes :
 # garder les deux introduit de la multicolinéarité sans info supplémentaire
