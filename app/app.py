@@ -628,10 +628,11 @@ with tab3:
             <p style="color:#4a6080;font-size:.88rem;line-height:1.8">
             🎓 <strong>Coding Week — Mars 2026</strong><br>
             Développé par :<br>
-            · Jay<br>
-            · Léandre Zadi<br>
+            · Jaures Donzo<br>
+            · Léandre Gnahoua<br>
             · Adama Sana<br>
-            · Ilias Janati
+            · Ilias Janati<br>
+            · Samira Elamrani
             </p>
         </div>""", unsafe_allow_html=True)
 
