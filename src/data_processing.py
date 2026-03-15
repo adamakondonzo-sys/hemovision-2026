@@ -44,8 +44,7 @@ def load_arff(filepath: str) -> pd.DataFrame:
     les features vues par les modèles.
     Résultat sur ce dataset : 69 valeurs manquantes supplémentaires détectées.
     """
-    data, meta = arff.loadarff(filepath)
-    df = pd.DataFrame(data)
+   
 
     # Décodage bytes → str
     for col in df.select_dtypes(include=["object"]).columns:
