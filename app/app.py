@@ -256,16 +256,7 @@ def load_resources():
 # ─────────────────────────────────────────────────────────────────────────────
 # HEADER
 # ─────────────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="hemovision-header">
-    <div style="font-size:3.5rem; flex-shrink:0;">🩸</div>
-    <div>
-        <h1>HémoVision</h1>
-        <p>Système d'aide à la décision pour la transplantation pédiatrique de moelle osseuse</p>
-        <span class="header-badge">XGBoost · SHAP · Explicable AI</span>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
