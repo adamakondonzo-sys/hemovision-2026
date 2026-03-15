@@ -7,7 +7,7 @@ Colonnes exclues :
     (garder les deux crée de la multicolinéarité sans apporter d'info supplémentaire)
 """
 
-
+import os
 import joblib
 import pandas as pd
 
