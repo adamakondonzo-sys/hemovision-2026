@@ -48,7 +48,9 @@ REDUNDANT_COLS = [
 
 COLS_TO_DROP = LEAKAGE_COLS + REDUNDANT_COLS
 
-
+MODELS_DIR = "models"
+DATA_DIR   = "data"
+ARFF_PATH  = os.path.join(DATA_DIR, "bone-marrow.arff")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
