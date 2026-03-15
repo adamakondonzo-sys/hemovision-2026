@@ -245,7 +245,7 @@ def load_resources():
     try:
         model    = joblib.load('models/xgboost_model.pkl')
         features = joblib.load('models/features_list.pkl')
-        return model, features
+        
     except FileNotFoundError:
         st.error("❌ Fichiers modèle introuvables dans models/")
         return None, None
