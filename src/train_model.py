@@ -76,14 +76,15 @@ def drop_invalid_cols(
     drop_train = _find_cols(X_train)
     drop_test  = _find_cols(X_test)
 
-    
+     assert set(drop_train) == set(drop_test), (
+        f"Colonnes asymétriques entre train et test !\n"
+        f"  Train: {sorted(drop_train)}\n  Test:  {sorted(drop_test)}"
+    )
 
     leakage_found   = [c for c in drop_train if any(c == l or c.startswith(f"{l}_") for l in LEAKAGE_COLS)]
     redundant_found = [c for c in drop_train if any(c == r or c.startswith(f"{r}_") for r in REDUNDANT_COLS)]
 
-    print(f"🚫 Post-greffe supprimées  ({len(leakage_found)}) : {leakage_found}")
-    print(f"🔁 Redondantes supprimées  ({len(redundant_found)}) : {redundant_found}")
-    print(f"✅ Features finales : {X_train.shape[1] - len(drop_train)} colonnes")
+   
 
     return X_train.drop(columns=drop_train), X_test.drop(columns=drop_test)
 
